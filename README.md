@@ -89,3 +89,63 @@ Refer to the `Architecture Diagram` in the repository for a detailed overview of
    git clone https://github.com/[YourUsername]/wedding-planner-app.git
    cd wedding-planner-app
    ```
+
+
+
+## Install Dependencies
+
+Navigate to each microservice directory and run:
+
+bash
+npm install
+Setup Environment Variables
+Create a .env file in each microservice folder with the following:
+
+makefile
+Copy code
+DATABASE_URL=your_database_url
+PORT=your_service_port
+JWT_SECRET=your_jwt_secret
+Start the Services
+Start All Microservices Individually:
+bash
+Copy code
+npm start
+Alternatively, Use Docker Compose to Start All Services at Once:
+bash
+Copy code
+docker-compose up
+Access the API Gateway
+Navigate to http://localhost:[API_GATEWAY_PORT].
+
+Usage
+Create Events: Use the /events endpoint to manage wedding events.
+Manage Guests: Use the /guests endpoint to handle guest lists.
+Track Budget: Access /budget for expense tracking.
+Set Notifications: Configure preferences via /notifications.
+Refer to the API Documentation in the repository for detailed endpoint descriptions.
+
+APIs
+Each microservice provides RESTful endpoints for CRUD operations. For example:
+
+Event Management Service
+POST /events: Create a new wedding event.
+GET /events/:id: Retrieve event details.
+PUT /events/:id: Update event details.
+DELETE /events/:id: Delete an event.
+Guest Management Service
+POST /guests: Add a new guest.
+GET /guests/:id: Retrieve guest information.
+PUT /guests/:id: Update guest details.
+DELETE /guests/:id: Remove a guest.
+For the complete API reference, check the API Docs folder.
+
+Contributions
+Contributions are welcome! To contribute:
+
+Fork the repository.
+Create a feature branch.
+Commit your changes.
+Submit a pull request.
+License
+This project is licensed under the MIT License. See the LICENSE file for more details.
