@@ -1,0 +1,15 @@
+CREATE TABLE budgets (
+  id SERIAL PRIMARY KEY,
+  category VARCHAR(255) NOT NULL,
+  budget_amount NUMERIC(10, 2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE expenses (
+  id SERIAL PRIMARY KEY,
+  budget_id INTEGER REFERENCES budgets(id) ON DELETE CASCADE,
+  vendor_name VARCHAR(255) NOT NULL,
+  amount NUMERIC(10, 2) NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

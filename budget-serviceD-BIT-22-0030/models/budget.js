@@ -1,22 +1,41 @@
-// models/budget.js
-const mongoose = require("mongoose");
+const pool = require("../config/dbconfig");
 
-const expenseSchema = new mongoose.Schema({
-  vendorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Vendor",
-    required: true,
-  },
-  amount: { type: Number, required: true },
-  date: { type: Date, default: Date.now },
-  description: { type: String },
-});
+// Budget-related queries
+exports.createBudget = async (category, budgetAmount) => {
+  const query =
+    "INSERT INTO budgets (category, budget_amount) VALUES ($1, $2) RETURNING *";
+  const result = await pool.query(query, [category, budgetAmount]);
+  return result.rows[0];
+};
 
-const budgetSchema = new mongoose.Schema({
-  totalBudget: { type: Number, required: true },
-  expenses: [expenseSchema],
-  remainingBudget: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now },
-});
+exports.getBudgetSummary = async () => {
+  const query = `
+    SELECT b.id, b.category, b.budget_amount, 
+      COALESCE(SUM(e.amount), 0) AS total_expenses,
+      (b.budget_amount - COALESCE(SUM(e.amount), 0)) AS remaining_budget
+    FROM budgets b
+    LEFT JOIN expenses e ON b.id = e.budget_id
+    GROUP BY b.id
+  `;
+  const result = await pool.query(query);
+  return result.rows;
+};
 
-module.exports = mongoose.model("Budget", budgetSchema);
+// Expense-related queries
+exports.addExpense = async (budgetId, vendorName, amount, description) => {
+  const query =
+    "INSERT INTO expenses (budget_id, vendor_name, amount, description) VALUES ($1, $2, $3, $4) RETURNING *";
+  const result = await pool.query(query, [
+    budgetId,
+    vendorName,
+    amount,
+    description,
+  ]);
+  return result.rows[0];
+};
+
+exports.getExpenseDetails = async (budgetId) => {
+  const query = "SELECT * FROM expenses WHERE budget_id = $1";
+  const result = await pool.query(query, [budgetId]);
+  return result.rows;
+};
